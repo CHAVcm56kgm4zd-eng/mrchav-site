@@ -9,3 +9,4 @@
 | 04 | 2026-10-07 | Step 4 parte 2: Hotchpotch pubblicata (testi, copertina, 2026), pagine di testo con contatti a fondo pieno | checkpoint-04 | backups/mrchav-site-checkpoint-04.zip |
 | 05 | 2026-10-07 | Step 4 chiuso: Diciotto 60 pagine, bozze privacy e copyright, titoletti nei testi, dominio e HTTPS verificati | checkpoint-05 | backups/mrchav-site-checkpoint-05.zip |
 | 06 | 2026-10-08 | Step 4 rifinitura: titolare privacy indicato, frase Diciotto corretta (versione B), controllo sintassi e ridondanze | checkpoint-06 | backups/mrchav-site-checkpoint-06.zip |
+| 07 | 2026-10-08 | Indicizzazione Google: guide lette, sitemap senza lastmod, checklist sezione 12, decisioni su Instagram/LinkedIn | checkpoint-07 | backups/mrchav-site-checkpoint-07.zip |
