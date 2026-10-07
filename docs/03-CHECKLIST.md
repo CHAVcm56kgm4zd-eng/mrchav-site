@@ -72,3 +72,20 @@ Segnare [x] solo a verifica fatta.
 - [ ] Monitor uptime
 - [ ] Controllo Search Console dopo 7 e 30 giorni
 - [ ] Backup periodico del repository
+
+## 12. Indicizzazione Google (da guide Google Search Central lette il 2026-10-08)
+Fonti: SEO starter guide, Google Images, Site move, Sitemap, ProfilePage.
+- [ ] Titolo e descrizione unici per ogni pagina (fatto nel build, da ricontrollare dopo le foto)
+- [ ] Testo alternativo breve e descrittivo, con luogo/soggetto/progetto; niente riempimento di parole chiave
+- [ ] Nomi file delle foto descrittivi (es. bologna-pride-2026-rivolta.jpg), mai IMG_1234
+- [ ] Immagini sempre con <img src> (mai sfondi CSS); srcset ma con src di riserva (già così)
+- [ ] Stesso URL per la stessa immagine in tutte le pagine
+- [ ] Immagine di anteprima (og:image) nitida, non un logo, non con testo
+- [ ] Prima del rilascio: nessun noindex rimasto sulle pagine che devono essere pubbliche; robots.txt senza blocchi
+- [ ] Anteprima su progetto Netlify separato: aggiungere header noindex (il canonical punta già a mrchav.com)
+- [ ] Mappa dei vecchi URL (Search Console > Pagine) verso i nuovi; redirect 301 uno a uno, mai tutti alla home; /copyright già indicizzato
+- [ ] Redirect mantenuti almeno un anno
+- [ ] Cambiare una cosa alla volta: piattaforma, layout e testi cambiano insieme, quindi aspettarsi oscillazioni per settimane; titolo, descrizione, dominio e immagine OG restano gli stessi
+- [ ] Sitemap: solo URL indicizzabili, senza lastmod (rimosso: Google lo usa solo se accurato) né priority/changefreq (ignorati); invio in Search Console e riga in robots.txt
+- [ ] Dati strutturati: valutare ProfilePage su /chi-sono/ con Person (name, alternateName, description, image, sameAs Instagram; LinkedIn escluso per scelta); test con Rich Results Test e Ispezione URL
+- [ ] Dopo il rilascio: Ispezione URL sulle pagine principali, controllo copertura a 7 e 30 giorni

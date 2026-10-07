@@ -129,12 +129,11 @@ pagina({
   indicizza: false,
 });
 
-// sitemap.xml e robots.txt
-const oggi = new Date().toISOString().slice(0, 10);
+// sitemap.xml e robots.txt (senza lastmod: Google lo usa solo se accurato, e la data di build non lo è)
 writeFileSync(
   join(dist, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlIndicizzabili
-    .map((u) => `  <url><loc>${settings.sito}${u}</loc><lastmod>${oggi}</lastmod></url>`)
+    .map((u) => `  <url><loc>${settings.sito}${u}</loc></url>`)
     .join('\n')}\n</urlset>\n`
 );
 writeFileSync(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${settings.sito}/sitemap.xml\n`);

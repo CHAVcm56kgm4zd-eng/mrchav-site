@@ -1,0 +1,552 @@
+
+===== package.json =====
+{
+  "name": "mrchav-site",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "npx --no-install serve dist || python3 -m http.server 8080 -d dist"
+  }
+}
+
+===== netlify.toml =====
+[build]
+  command = "node build.mjs"
+  publish = "dist"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/foto-prova/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+===== build.mjs =====
+// Costruisce il sito statico in dist/. Nessuna dipendenza: solo Node.
+// Uso: node build.mjs
+import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { Base } from './src/layouts/Base.js';
+import { GrigliaFoto } from './src/components/GrigliaFoto.js';
+import { Foto } from './src/components/Foto.js';
+import { BloccoChiSono } from './src/components/BloccoChiSono.js';
+import { ModuloShop } from './src/components/ModuloShop.js';
+import { esc, fill, paragrafi } from './src/lib/util.js';
+
+const root = dirname(fileURLToPath(import.meta.url));
+const dist = join(root, 'dist');
+const leggi = (p) => JSON.parse(readFileSync(join(root, p), 'utf8'));
+const elenco = (d) =>
+  existsSync(join(root, d))
+    ? readdirSync(join(root, d)).filter((f) => f.endsWith('.json')).map((f) => ({ slug: f.replace(/\.json$/, ''), ...leggi(join(d, f)) }))
+    : [];
+
+const settings = leggi('content/settings.json');
+const foto = elenco('content/foto').filter((f) => f.attiva !== false).sort((a, b) => (a.ordine ?? 999) - (b.ordine ?? 999));
+// Le zine con "attiva": false restano bozze e non vengono pubblicate.
+const zine = elenco('content/zine').filter((z) => z.attiva !== false).sort((a, b) => (b.anno ?? 0) - (a.anno ?? 0));
+const pagine = Object.fromEntries(elenco('content/pagine').map((p) => [p.slug, p]));
+const anno = new Date().getFullYear();
+const avvisi = [];
+
+// Controlli di qualità sui contenuti
+for (const f of foto) if (!f.alt || !f.alt.trim()) avvisi.push(`Foto senza testo alternativo: ${f.slug}`);
+for (const f of foto) if (!f.width || !f.height) avvisi.push(`Foto senza larghezza/altezza: ${f.slug}`);
+for (const [slug, p] of Object.entries(pagine)) if (p.indicizza === false) avvisi.push(`Pagina non indicizzata (da scrivere): /${slug}/`);
+
+const pagineLegali = ['privacy', 'copyright'].map((s) => pagine[s]).filter((p) => p && p.indicizza !== false);
+const urlIndicizzabili = [];
+
+function pagina({ percorso, seo, h1, corpo, indicizza = true, tipo = 'testo' }) {
+  const html = Base({
+    settings,
+    seo: { settings, percorso, indicizza, ...seo },
+    h1,
+    corpo,
+    pagineLegali,
+    anno,
+    tipo,
+  });
+  const file = percorso === '/404' ? '404.html' : join(percorso.replace(/^\//, ''), 'index.html');
+  mkdirSync(dirname(join(dist, file)), { recursive: true });
+  writeFileSync(join(dist, file), html);
+  if (indicizza && percorso !== '/404') urlIndicizzabili.push(percorso);
+}
+
+rmSync(dist, { recursive: true, force: true });
+mkdirSync(dist, { recursive: true });
+cpSync(join(root, 'public'), dist, { recursive: true, filter: (s) => !s.endsWith('.gitkeep') });
+cpSync(join(root, 'src/styles'), join(dist, 'css'), { recursive: true, filter: (s) => !s.endsWith('.gitkeep') });
+
+// Home
+pagina({
+  percorso: '/',
+  seo: { titolo: fill(settings.titoloHome, settings), descrizione: settings.descrizione, home: true },
+  h1: { testo: fill(settings.titoloH1, settings), visibile: false },
+  tipo: 'griglia',
+  corpo: GrigliaFoto(foto, settings) + (pagine['chi-sono'] ? BloccoChiSono(pagine['chi-sono'], settings) : ''),
+});
+
+// Chi sono (pagina completa, fuori dal menu ma collegata e in sitemap)
+const cs = pagine['chi-sono'];
+pagina({
+  percorso: '/chi-sono/',
+  seo: { titolo: `${cs.titolo} — ${settings.nome}`, descrizione: cs.descrizione },
+  h1: { testo: cs.titolo, visibile: true },
+  corpo: `<div class="testo-pagina">${paragrafi(cs.testo, settings)}</div>`,
+});
+
+// Indice zine
+pagina({
+  percorso: '/zine/',
+  seo: { titolo: `Zine — ${settings.nome}`, descrizione: `Zine fotografiche autoprodotte di ${settings.nome}.` },
+  h1: { testo: 'Zine', visibile: false },
+  tipo: 'griglia',
+  corpo: `<div class="griglia zine-elenco">${zine
+    .map((z) => {
+      const c = z.copertina;
+      const fig = Foto({ ...c, alt: c.alt || `Copertina ${z.titolo}` }, 0, settings).replace(/^<figure class="foto">/, '').replace(/<\/figure>$/, '');
+      return `<figure class="foto"><a href="/zine/${z.slug}/" aria-label="${esc(z.titolo)}, zine${z.anno ? ' ' + z.anno : ''}">${fig}</a></figure>`;
+    })
+    .join('')}</div>`,
+});
+
+// Una pagina per ogni zine
+for (const z of zine) {
+  const ristampa = z.ristampa && z.ristampa.attiva
+    ? `<p class="ristampa"><a href="mailto:${esc(settings.email)}?subject=${encodeURIComponent(z.ristampa.oggettoEmail || z.titolo)}">${esc(z.ristampa.etichetta)} →</a></p>`
+    : '';
+  pagina({
+    percorso: `/zine/${z.slug}/`,
+    seo: { titolo: `${z.titolo}, zine fotografica — ${settings.nome}`, descrizione: z.descrizione },
+    h1: { testo: z.titolo, visibile: true },
+    corpo:
+      (z.copertina ? `<div class="copertina-zine">${Foto({ ...z.copertina, alt: z.copertina.alt || `Copertina ${z.titolo}` }, 0, settings)}</div>` : '') +
+      `<div class="testo-pagina">${z.sottotitolo ? `<p>${esc(z.sottotitolo)}</p>` : ''}${paragrafi(z.testo, settings)}</div>` +
+      ModuloShop(z, settings) +
+      ristampa +
+      (z.foto && z.foto.length ? GrigliaFoto(z.foto, settings) : ''),
+  });
+}
+
+// Pagine legali: create sempre, ma non indicizzate finché il testo non è pronto
+for (const s of ['privacy', 'copyright']) {
+  const p = pagine[s];
+  if (!p) continue;
+  pagina({
+    percorso: `/${s}/`,
+    seo: { titolo: `${p.titolo} — ${settings.nome}`, descrizione: p.descrizione },
+    h1: { testo: p.titolo, visibile: true },
+    corpo: `<div class="testo-pagina">${paragrafi(p.testo, settings)}</div>`,
+    indicizza: p.indicizza !== false,
+  });
+}
+
+// 404
+pagina({
+  percorso: '/404',
+  seo: { titolo: `Pagina non trovata — ${settings.nome}`, descrizione: 'Pagina non trovata.' },
+  h1: { testo: 'Pagina non trovata', visibile: true },
+  corpo: `<div class="testo-pagina"><p><a href="/">Torna alla home</a></p></div>`,
+  indicizza: false,
+});
+
+// sitemap.xml e robots.txt
+const oggi = new Date().toISOString().slice(0, 10);
+writeFileSync(
+  join(dist, 'sitemap.xml'),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlIndicizzabili
+    .map((u) => `  <url><loc>${settings.sito}${u}</loc><lastmod>${oggi}</lastmod></url>`)
+    .join('\n')}\n</urlset>\n`
+);
+writeFileSync(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${settings.sito}/sitemap.xml\n`);
+
+console.log(`Build completata: ${foto.length} foto, ${zine.length} zine, ${urlIndicizzabili.length} URL in sitemap.`);
+for (const a of avvisi) console.log('Avviso:', a);
+
+===== src/lib/util.js =====
+// Funzioni di servizio condivise dai componenti.
+
+export const esc = (s = '') =>
+  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+// Sostituisce {luogo} con il valore in content/settings.json (un solo punto da cambiare).
+export const fill = (s = '', settings) => String(s).replaceAll('{luogo}', settings.luogo);
+
+// Immagine su Cloudinary a una data larghezza (formato e qualità automatici).
+export const cloudinary = (settings, id, w) =>
+  `https://res.cloudinary.com/${settings.cloudinaryCloud}/image/upload/f_auto,q_auto,w_${w}/${id}`;
+
+// Testo a paragrafi. Una riga che inizia con "## " diventa un titoletto.
+export const paragrafi = (righe = [], settings) =>
+  righe
+    .map((t) => (t.startsWith('## ') ? `<h2>${esc(fill(t.slice(3), settings))}</h2>` : `<p>${esc(fill(t, settings))}</p>`))
+    .join('');
+
+===== src/components/BloccoChiSono.js =====
+import { esc, fill } from '../lib/util.js';
+
+// Bio breve in fondo alla home. Il link alla pagina completa si accende da settings.chiSonoLink.
+export function BloccoChiSono(pagina, settings) {
+  const link = settings.chiSonoLink ? ` <a href="/chi-sono/">Chi sono</a>` : '';
+  return `<section class="blocco-chi-sono" aria-label="Chi sono">
+  <p>${esc(fill(pagina.breve, settings))}${link}</p>
+</section>`;
+}
+
+===== src/components/ContattiFissi.js =====
+import { esc } from '../lib/util.js';
+
+// Contatti e link Zine sempre visibili, fissi in basso a sinistra.
+export function ContattiFissi(settings) {
+  return `<nav class="contatti-fissi" aria-label="Contatti e zine">
+  <a href="/zine/">Zine</a>
+  <a href="https://www.instagram.com/${esc(settings.instagram)}/" rel="me noopener">@${esc(settings.instagram)}</a>
+  <a href="mailto:${esc(settings.email)}">${esc(settings.email)}</a>
+</nav>`;
+}
+
+===== src/components/Foto.js =====
+import { esc, cloudinary } from '../lib/util.js';
+
+// Una foto nel suo formato originale. width/height evitano salti di layout.
+// Sorgente: file locale (src) oppure Cloudinary (cloudinaryId).
+export function Foto(f, indice, settings) {
+  const eager = indice < 4;
+  const attr = `width="${f.width}" height="${f.height}" alt="${esc(f.alt || '')}" decoding="async" ${
+    eager ? `loading="eager"${indice === 0 ? ' fetchpriority="high"' : ''}` : 'loading="lazy"'
+  }`;
+  const sizes = '(min-width:1400px) 25vw, (min-width:900px) 33vw, 50vw';
+  if (f.cloudinaryId) {
+    const srcset = [400, 800, 1200].map((w) => `${cloudinary(settings, f.cloudinaryId, w)} ${w}w`).join(', ');
+    return `<figure class="foto"><img src="${cloudinary(settings, f.cloudinaryId, 800)}" srcset="${srcset}" sizes="${sizes}" ${attr}></figure>`;
+  }
+  return `<figure class="foto"><img src="${esc(f.src)}" ${attr}></figure>`;
+}
+
+===== src/components/GrigliaFoto.js =====
+import { Foto } from './Foto.js';
+
+// Griglia unica a colonne, senza spazi. Le foto non sono cliccabili.
+export function GrigliaFoto(foto, settings, tag = 'div') {
+  return `<${tag} class="griglia">${foto.map((f, i) => Foto(f, i, settings)).join('')}</${tag}>`;
+}
+
+===== src/components/ModuloShop.js =====
+import { esc } from '../lib/util.js';
+
+// Modulo vendita/preordine: spento di default.
+// Si accende con settings.shopAttivo = true E zine.preordine.attivo = true.
+// Il codice di pagamento (link Stripe o simile) andrà in zine.preordine.url quando deciderai.
+export function ModuloShop(zine, settings) {
+  if (!settings.shopAttivo || !zine.preordine || !zine.preordine.attivo || !zine.preordine.url) return '';
+  return `<p class="shop"><a href="${esc(zine.preordine.url)}" rel="noopener">${esc(zine.preordine.etichetta || 'Preordina')}</a></p>`;
+}
+
+===== src/components/PiedePagina.js =====
+// Link legali. Le pagine non ancora scritte (indicizza: false) non vengono linkate.
+export function PiedePagina(pagineLegali, anno) {
+  const link = pagineLegali.map((p) => `<a href="/${p.slug}/">${p.titolo}</a>`).join(' ');
+  return `<footer class="piede"><span>© ${anno} Mr.Chav</span>${link ? ` ${link}` : ''}</footer>`;
+}
+
+===== src/components/SEO.js =====
+import { esc, fill, cloudinary } from '../lib/util.js';
+
+// Meta, canonical, Open Graph, Twitter card, dati strutturati. Nessuna meta keywords (ignorate da Google).
+export function SEO({ settings, titolo, descrizione, percorso, indicizza = true, home = false }) {
+  const url = settings.sito + percorso;
+  const og = `https://res.cloudinary.com/${settings.cloudinaryCloud}/image/upload/f_jpg,q_auto,w_1200,h_630,c_fill/${settings.ogImageCloudinaryId}`;
+  const d = fill(descrizione, settings);
+  const jsonld = home
+    ? `<script type="application/ld+json">${JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: settings.nome,
+        jobTitle: 'Fotografo',
+        url: settings.sito + '/',
+        image: og,
+        homeLocation: { '@type': 'Place', name: settings.luogo },
+        sameAs: [`https://www.instagram.com/${settings.instagram}/`],
+      })}</script>`
+    : '';
+  return `<title>${esc(titolo)}</title>
+<meta name="description" content="${esc(d)}">
+<link rel="canonical" href="${esc(url)}">
+<meta name="robots" content="${indicizza ? 'index, follow' : 'noindex, follow'}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="${esc(settings.nome)}">
+<meta property="og:title" content="${esc(titolo)}">
+<meta property="og:description" content="${esc(d)}">
+<meta property="og:url" content="${esc(url)}">
+<meta property="og:image" content="${esc(og)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(titolo)}">
+<meta name="twitter:description" content="${esc(d)}">
+<meta name="twitter:image" content="${esc(og)}">
+${jsonld}`;
+}
+
+===== src/components/Wordmark.js =====
+import { esc } from '../lib/util.js';
+
+// Nome grande, fisso in alto a sinistra. Porta alla home.
+export function Wordmark(settings) {
+  return `<a class="wordmark" href="/" aria-label="${esc(settings.nome)}, home">${esc(settings.nome)}</a>`;
+}
+
+===== src/layouts/Base.js =====
+import { SEO } from '../components/SEO.js';
+import { Wordmark } from '../components/Wordmark.js';
+import { ContattiFissi } from '../components/ContattiFissi.js';
+import { PiedePagina } from '../components/PiedePagina.js';
+import { esc } from '../lib/util.js';
+
+// Struttura comune di tutte le pagine. Colori letti da content/settings.json (nessun colore nel CSS delle pagine).
+export function Base({ settings, seo, h1, corpo, pagineLegali, anno, tipo = 'testo' }) {
+  return `<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="${esc(settings.sfondo)}">
+<link rel="preload" href="/fonts/LibreBaskerville-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<style>:root{--sfondo:${esc(settings.sfondo)};--testo:${esc(settings.testo)}}</style>
+<link rel="stylesheet" href="/css/global.css">
+${SEO(seo)}
+</head>
+<body class="tipo-${tipo}">
+<a class="salta" href="#contenuto">Vai al contenuto</a>
+${Wordmark(settings)}
+${ContattiFissi(settings)}
+<div class="testata" aria-hidden="true"></div>
+<main id="contenuto">
+<h1 class="${h1.visibile ? 'titolo-pagina' : 'solo-lettori'}">${esc(h1.testo)}</h1>
+${corpo}
+</main>
+${PiedePagina(pagineLegali, anno)}
+</body>
+</html>`;
+}
+
+===== src/styles/global.css =====
+/* Colori sfondo/testo: arrivano da content/settings.json come --sfondo e --testo. */
+:root {
+  --alt-wordmark: clamp(2.6rem, 13vw, 7rem);
+  --margine: 1rem;
+  --font: "Libre Baskerville", Georgia, "Times New Roman", serif;
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  src: url("/fonts/LibreBaskerville-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--sfondo);
+  color: var(--testo);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+a { color: inherit; text-underline-offset: 0.2em; }
+a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* Testo solo per lettori di schermo e Google, non per la vista. */
+.solo-lettori {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.salta { position: absolute; left: -999px; top: 0; background: #fff; color: #000; padding: .5rem 1rem; z-index: 100; }
+.salta:focus { left: 0; }
+
+/* Elementi fissi: bianchi con effetto di fusione sull'immagine sotto. */
+.wordmark, .contatti-fissi {
+  position: fixed; z-index: 50; left: var(--margine);
+  color: #fff; mix-blend-mode: difference; text-decoration: none;
+}
+.wordmark {
+  top: .5rem; font-size: var(--alt-wordmark); line-height: 1; letter-spacing: -0.02em;
+}
+.contatti-fissi {
+  bottom: var(--margine); display: flex; flex-direction: column; gap: .35rem;
+  font-size: clamp(.95rem, 3.8vw, 1.25rem); line-height: 1.3;
+}
+.contatti-fissi a { color: #fff; text-decoration: none; }
+.contatti-fissi a:hover { text-decoration: underline; }
+
+.testata { height: calc(var(--alt-wordmark) + 1.5rem); }
+
+/* Griglia unica: colonne senza spazi, ogni foto nel suo formato. */
+.griglia { column-count: 2; column-gap: 0; }
+@media (min-width: 900px) { .griglia { column-count: 3; } }
+@media (min-width: 1400px) { .griglia { column-count: 4; } }
+.foto { margin: 0; break-inside: avoid; }
+.foto img { display: block; width: 100%; height: auto; }
+.foto a { display: block; }
+
+/* Pagine di testo */
+.titolo-pagina { font-weight: 400; font-size: clamp(1.6rem, 6vw, 2.4rem); line-height: 1.2; margin: 0 var(--margine) 1.5rem; }
+.testo-pagina, .blocco-chi-sono, .piede { padding: 0 var(--margine); max-width: 46rem; }
+.testo-pagina p, .blocco-chi-sono p { margin: 0 0 1.2rem; }
+.blocco-chi-sono { margin: 3rem 0 1rem; }
+.piede { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .85rem; padding-top: 1rem; padding-bottom: 8rem; opacity: .8; }
+.ristampa { margin: 1.5rem var(--margine) 2rem; }
+.shop { margin: 1rem var(--margine); }
+.zine-elenco .foto a { text-decoration: none; }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+/* Pagine di testo: i contatti fissi hanno uno sfondo pieno, così non si sovrappongono alle righe. */
+.tipo-testo .contatti-fissi {
+  left: 0; right: 0; bottom: 0; padding: .7rem var(--margine);
+  mix-blend-mode: normal; background: var(--sfondo);
+}
+.copertina-zine { max-width: 24rem; margin: 0 var(--margine) 1.5rem; }
+.copertina-zine .foto { break-inside: auto; }
+.tipo-testo .wordmark {
+  left: 0; right: 0; top: 0; padding: .5rem var(--margine) .2rem;
+  mix-blend-mode: normal; background: var(--sfondo);
+}
+.testo-pagina h2 { font-weight: 400; font-size: 1.15rem; line-height: 1.3; margin: 2rem 0 .5rem; }
+
+===== content/settings.json =====
+{
+  "nome": "Mr.Chav",
+  "sito": "https://mrchav.com",
+  "luogo": "Bologna",
+  "email": "mr_chav@icloud.com",
+  "instagram": "mr.chav__",
+  "sfondo": "#000000",
+  "testo": "#ffffff",
+  "titoloHome": "Mr.Chav — Fotografo a {luogo} | Street, documentario, eventi",
+  "titoloH1": "Mr.Chav, fotografo a {luogo}: street, documentario, ritratti ed eventi",
+  "descrizione": "Mr.Chav è un fotografo nato a Palermo, residente a {luogo}. Street photography, documentario, ritratti ed eventi. Analogico e digitale.",
+  "ogImageCloudinaryId": "60930028_dz0yhm",
+  "cloudinaryCloud": "dbhswbguk",
+  "chiSonoLink": true,
+  "shopAttivo": false
+}
+
+===== content/pagine/chi-sono.json =====
+{
+  "titolo": "Chi sono",
+  "descrizione": "Mr.Chav è un fotografo nato a Palermo, oggi a {luogo}. Scatta in analogico e digitale: street, documentario, ritratti ed eventi.",
+  "breve": "Mr.Chav è un fotografo nato a Palermo, oggi a {luogo}. Scatta in analogico e digitale: street, documentario, ritratti ed eventi.",
+  "testo": [
+    "Mr.Chav è un fotografo nato a Palermo, oggi a {luogo}. Scatta in analogico e digitale — Sony per il digitale, point and shoot e reflex per l'analogico. Lavora spesso con il flash, anche in esterni.",
+    "Ha lasciato la Sicilia a diciotto anni e da allora fotografa quello che incontra: la strada, la gente, i concerti, i ritorni. Il suo lavoro si muove tra documentario e ritratto senza studio, senza set — solo la luce che c'è e il momento che passa.",
+    "Nel tempo ha collaborato con locali come Granata e Tank, documentando i loro live. Nel 2026 ha esposto al festival Under the Bridge, mostra curata da Mariolina Catani in collaborazione con Arci Bologna. Partecipa regolarmente ad eventi espositivi in città.",
+    "Diciotto è il suo primo lavoro autopubblicato."
+  ]
+}
+
+===== content/pagine/copyright.json =====
+{
+  "titolo": "Copyright",
+  "descrizione": "Informazioni sul copyright delle fotografie di mrchav.com.",
+  "indicizza": false,
+  "testo": [
+    "## Diritti sulle fotografie",
+    "Tutte le fotografie pubblicate su questo sito, le copertine e i testi sono opera di Mr.Chav e sono protetti dalla legge sul diritto d'autore (Legge 633/1941). Tutti i diritti sono riservati.",
+    "## Uso delle immagini",
+    "Le immagini non possono essere copiate, scaricate, modificate, pubblicate o utilizzate in alcun modo, neanche in parte, senza autorizzazione scritta. Il divieto vale per social, siti, stampa e per l'addestramento di sistemi di intelligenza artificiale.",
+    "## Richieste di utilizzo",
+    "Per licenze, collaborazioni o richieste di utilizzo scrivi a mr_chav@icloud.com, indicando la foto, l'uso previsto, la durata e il territorio.",
+    "## Persone ritratte",
+    "Se ti riconosci in una fotografia e vuoi chiederne la rimozione, scrivi a mr_chav@icloud.com indicando la foto. La richiesta sarà valutata e riscontrata il prima possibile.",
+    "## Zine",
+    "Le zine Diciotto e Hotchpotch sono opere protette allo stesso modo. Il contenuto, compresa l'impaginazione, non può essere riprodotto senza autorizzazione."
+  ]
+}
+
+===== content/pagine/privacy.json =====
+{
+  "titolo": "Privacy",
+  "descrizione": "Informativa sulla privacy di mrchav.com.",
+  "indicizza": false,
+  "testo": [
+    "## Titolare del trattamento",
+    "Il titolare del trattamento è Vincenzo De Simone, che opera con il nome Mr.Chav. Contatto: mr_chav@icloud.com.",
+    "## Dati raccolti da questo sito",
+    "Il sito non usa cookie, non ha moduli di contatto, non ha strumenti di analisi delle visite e non mostra pubblicità.",
+    "Per funzionare, il sito è ospitato da Netlify e le immagini sono fornite da Cloudinary. Questi servizi possono registrare dati tecnici di navigazione, come l'indirizzo IP, la data e l'ora della richiesta e il tipo di browser. I dati servono solo al funzionamento e alla sicurezza del servizio.",
+    "I caratteri tipografici sono ospitati sul sito stesso e non vengono caricati da servizi esterni.",
+    "## Contatti via email",
+    "Se scrivi a mr_chav@icloud.com, l'indirizzo e il contenuto del messaggio vengono usati solo per risponderti. Non vengono ceduti a terzi e sono conservati per il tempo necessario a gestire la richiesta.",
+    "## Link esterni",
+    "Il sito rimanda a Instagram. Quando visiti quel sito si applicano le regole di Instagram.",
+    "## Base giuridica",
+    "Il trattamento dei dati tecnici si basa sul legittimo interesse al funzionamento e alla sicurezza del sito. La risposta alle email si basa sulla tua richiesta.",
+    "## Trasferimento dei dati fuori dall'Unione Europea",
+    "I fornitori indicati possono trattare i dati anche fuori dallo Spazio Economico Europeo, con le garanzie previste dal regolamento europeo.",
+    "## I tuoi diritti",
+    "Puoi chiedere accesso, rettifica, cancellazione, limitazione e opposizione al trattamento dei tuoi dati scrivendo a mr_chav@icloud.com. Hai anche il diritto di presentare reclamo al Garante per la protezione dei dati personali (garanteprivacy.it).",
+    "## Aggiornamenti",
+    "Questa informativa può essere aggiornata. Ultimo aggiornamento: ottobre 2026."
+  ]
+}
+
+===== content/zine/diciotto.json =====
+{
+  "titolo": "Diciotto",
+  "anno": 2025,
+  "descrizione": "Zine fotografica autoprodotta di Mr.Chav. Fotografie analogiche scattate nei viaggi di ritorno verso la Sicilia.",
+  "testo": [
+    "Diciotto sono gli anni trascorsi lontano da Palermo, partito a diciotto anni con tre valigie e destinazione Bologna. Le fotografie raccolte in queste pagine sono state scattate negli ultimi due anni, nei viaggi di ritorno verso la Sicilia — un omaggio alla città, scattato nei miei momenti più difficili. Tutte le foto sono scattate in analogico.",
+    "Zine fotografica autoprodotta. 60 pagine, carta opaca 130gr, punto metallico, stampa toner. Bologna, maggio 2025. Testi e fotografie di Mr.Chav. Prima edizione: 100 copie numerate, esaurita."
+  ],
+  "copertina": { "cloudinaryId": "Scansione_8_pefnsp", "width": 800, "height": 1100, "alt": "Copertina della zine Diciotto di Mr.Chav" },
+  "foto": [],
+  "ristampa": { "attiva": true, "etichetta": "Richiedi info seconda ristampa", "oggettoEmail": "Diciotto Info seconda ristampa" },
+  "preordine": { "attivo": false }
+}
+
+===== content/zine/hotchpotch.json =====
+{
+  "attiva": true,
+  "titolo": "Hotchpotch",
+  "anno": 2026,
+  "descrizione": "Hotchpotch, zine fotografica di Mr.Chav su Sicilia e Palermo. 32 pagine, fotografie analogiche e digitali, 100 copie.",
+  "testo": [
+    "Hotchpotch vuol dire miscuglio, ed è più o meno da lì che parte tutto.",
+    "È il mio secondo lavoro fotografico su carta dopo Diciotto. Questa volta volevo progettare qualcosa di più leggero, dall'idea all'oggetto stesso. 32 pagine tenute insieme, ancora una volta, dalla Sicilia e da Palermo, la mia città.",
+    "Dentro c'è un po' di tutto, la food photography, la strada, le persone, i riti, la vita quotidiana. Santa Rosalia circondata da sarde allinguate, un bambino al mare, un corteo funebre, gli Skins a Ballarò. E poi un cruscotto pieno di santini, con Madonna in penombra dietro.",
+    "Non volevo evitare gli stereotipi siciliani e neanche raccontarli per forza come tali. Mi piaceva piuttosto l'idea di giocarci, metterli insieme, scomporli, affiancarli e vedere cosa succedeva.",
+    "Alla fine è un'insalata fotografica, ma il filo c'è. Ed è ancora una volta la mia terra.",
+    "32 pagine, formato circa A5. Fotografie analogiche e digitali. Stampa HP Indigo, carta patinata opaca 135 g/m², rilegatura a punto metallico. Tiratura 100 copie."
+  ],
+  "copertina": { "src": "/zine/hotchpotch-copertina.jpg", "width": 1128, "height": 1600, "alt": "Copertina della zine Hotchpotch di Mr.Chav" },
+  "foto": [],
+  "ristampa": { "attiva": false },
+  "preordine": { "attivo": false }
+}
