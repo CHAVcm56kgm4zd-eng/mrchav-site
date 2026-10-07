@@ -1,0 +1,16 @@
+{
+  "nome": "Mr.Chav",
+  "sito": "https://mrchav.com",
+  "luogo": "Bologna",
+  "email": "mr_chav@icloud.com",
+  "instagram": "mr.chav__",
+  "sfondo": "#000000",
+  "testo": "#ffffff",
+  "titoloHome": "Mr.Chav — Fotografo a {luogo} | Street, documentario, eventi",
+  "titoloH1": "Mr.Chav, fotografo a {luogo}: street, documentario, ritratti ed eventi",
+  "descrizione": "Mr.Chav è un fotografo nato a Palermo, residente a {luogo}. Street photography, documentario, ritratti ed eventi. Analogico e digitale.",
+  "ogImageCloudinaryId": "60930028_dz0yhm",
+  "cloudinaryCloud": "dbhswbguk",
+  "chiSonoLink": true,
+  "shopAttivo": false
+}

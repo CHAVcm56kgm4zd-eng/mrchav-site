@@ -1,0 +1,13 @@
+{
+  "titolo": "Diciotto",
+  "anno": 2025,
+  "descrizione": "Zine fotografica autoprodotta di Mr.Chav. Fotografie analogiche scattate nei viaggi di ritorno verso la Sicilia.",
+  "testo": [
+    "Diciotto sono gli anni trascorsi lontano da Palermo, partito a diciotto anni con tre valigie e destinazione Bologna. Le fotografie raccolte in queste pagine sono state scattate negli ultimi due anni, nei viaggi di ritorno verso la Sicilia — un omaggio alla città, nei miei momenti più difficili. Tutte le foto sono scattate in analogico.",
+    "Zine fotografica autoprodotta. Carta opaca 130gr, punto metallico, stampa toner. Bologna, maggio 2025. Testi e fotografie di Mr.Chav. Prima edizione: 100 copie numerate, esaurita."
+  ],
+  "copertina": { "cloudinaryId": "Scansione_8_pefnsp", "width": 800, "height": 1100, "alt": "Copertina della zine Diciotto di Mr.Chav" },
+  "foto": [],
+  "ristampa": { "attiva": true, "etichetta": "Richiedi info seconda ristampa", "oggettoEmail": "Diciotto Info seconda ristampa" },
+  "preordine": { "attivo": false }
+}

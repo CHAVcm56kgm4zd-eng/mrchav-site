@@ -1,0 +1,76 @@
+/* Colori sfondo/testo: arrivano da content/settings.json come --sfondo e --testo. */
+:root {
+  --alt-wordmark: clamp(2.6rem, 13vw, 7rem);
+  --margine: 1rem;
+  --font: "Libre Baskerville", Georgia, "Times New Roman", serif;
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  src: url("/fonts/LibreBaskerville-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--sfondo);
+  color: var(--testo);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+a { color: inherit; text-underline-offset: 0.2em; }
+a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* Testo solo per lettori di schermo e Google, non per la vista. */
+.solo-lettori {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.salta { position: absolute; left: -999px; top: 0; background: #fff; color: #000; padding: .5rem 1rem; z-index: 100; }
+.salta:focus { left: 0; }
+
+/* Elementi fissi: bianchi con effetto di fusione sull'immagine sotto. */
+.wordmark, .contatti-fissi {
+  position: fixed; z-index: 50; left: var(--margine);
+  color: #fff; mix-blend-mode: difference; text-decoration: none;
+}
+.wordmark {
+  top: .5rem; font-size: var(--alt-wordmark); line-height: 1; letter-spacing: -0.02em;
+}
+.contatti-fissi {
+  bottom: var(--margine); display: flex; flex-direction: column; gap: .35rem;
+  font-size: clamp(.95rem, 3.8vw, 1.25rem); line-height: 1.3;
+}
+.contatti-fissi a { color: #fff; text-decoration: none; }
+.contatti-fissi a:hover { text-decoration: underline; }
+
+.testata { height: calc(var(--alt-wordmark) + 1.5rem); }
+
+/* Griglia unica: colonne senza spazi, ogni foto nel suo formato. */
+.griglia { column-count: 2; column-gap: 0; }
+@media (min-width: 900px) { .griglia { column-count: 3; } }
+@media (min-width: 1400px) { .griglia { column-count: 4; } }
+.foto { margin: 0; break-inside: avoid; }
+.foto img { display: block; width: 100%; height: auto; }
+.foto a { display: block; }
+
+/* Pagine di testo */
+.titolo-pagina { font-weight: 400; font-size: clamp(1.6rem, 6vw, 2.4rem); line-height: 1.2; margin: 0 var(--margine) 1.5rem; }
+.testo-pagina, .blocco-chi-sono, .piede { padding: 0 var(--margine); max-width: 46rem; }
+.testo-pagina p, .blocco-chi-sono p { margin: 0 0 1.2rem; }
+.blocco-chi-sono { margin: 3rem 0 1rem; }
+.piede { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .85rem; padding-top: 1rem; padding-bottom: 8rem; opacity: .8; }
+.ristampa { margin: 1.5rem var(--margine) 2rem; }
+.shop { margin: 1rem var(--margine); }
+.zine-elenco .foto a { text-decoration: none; }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

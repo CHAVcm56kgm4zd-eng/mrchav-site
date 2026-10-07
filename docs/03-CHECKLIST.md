@@ -15,28 +15,28 @@ Segnare [x] solo a verifica fatta.
 - [x] Sitemap approvata (checkpoint 01)
 - [ ] URL puliti, minuscoli, senza accenti
 - [ ] Redirect definiti
-- [ ] Modello dati in `content/`
+- [x] Modello dati in `content/`
 
 ## 3. Design
-- [ ] Variabili: colori, sfondo, spaziature, scala tipografica
-- [ ] Libre Baskerville self-hosted (prestazioni e privacy)
-- [ ] Layout mobile first, poi tablet e desktop
+- [x] Variabili: colori, sfondo, spaziature, scala tipografica
+- [x] Libre Baskerville self-hosted (prestazioni e privacy)
+- [x] Layout mobile first, poi tablet e desktop
 - [ ] Stati: hover, focus, errore, caricamento
 
 ## 4. Codice
-- [ ] Progetto Astro creato, componenti separati
+- [x] Progetto creato (script Node, non Astro), componenti separati
 - [ ] HTML semantico (header, main, nav, footer, un solo H1 per pagina)
-- [ ] Galleria e lightbox da tastiera
-- [ ] Modulo shop disattivato con interruttore
+- [x] Griglia foto (nessun lightbox, come da brief)
+- [x] Modulo shop disattivato con interruttore
 - [ ] Pannello Decap per foto e sfondo
 
 ## 5. SEO tecnico
 - [ ] Title e meta description unici per pagina
-- [ ] Canonical coerente (con o senza www, una sola scelta)
+- [x] Canonical coerente (senza www; da applicare anche nel redirect Netlify)
 - [ ] Open Graph e Twitter card
 - [ ] Dati strutturati JSON-LD (Person/Photographer, ImageObject)
-- [ ] sitemap.xml e robots.txt
-- [ ] Nessuna meta keywords
+- [x] sitemap.xml e robots.txt
+- [x] Nessuna meta keywords
 - [ ] Search Console ricollegata, sitemap inviata
 
 ## 6. Immagini e prestazioni
