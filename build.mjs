@@ -21,7 +21,8 @@ const elenco = (d) =>
 
 const settings = leggi('content/settings.json');
 const foto = elenco('content/foto').filter((f) => f.attiva !== false).sort((a, b) => (a.ordine ?? 999) - (b.ordine ?? 999));
-const zine = elenco('content/zine').sort((a, b) => (b.anno ?? 0) - (a.anno ?? 0));
+// Le zine con "attiva": false restano bozze e non vengono pubblicate.
+const zine = elenco('content/zine').filter((z) => z.attiva !== false).sort((a, b) => (b.anno ?? 0) - (a.anno ?? 0));
 const pagine = Object.fromEntries(elenco('content/pagine').map((p) => [p.slug, p]));
 const anno = new Date().getFullYear();
 const avvisi = [];
@@ -80,7 +81,7 @@ pagina({
     .map((z) => {
       const c = z.copertina;
       const fig = Foto({ ...c, alt: c.alt || `Copertina ${z.titolo}` }, 0, settings).replace(/^<figure class="foto">/, '').replace(/<\/figure>$/, '');
-      return `<figure class="foto"><a href="/zine/${z.slug}/" aria-label="${esc(z.titolo)}, zine ${z.anno}">${fig}</a></figure>`;
+      return `<figure class="foto"><a href="/zine/${z.slug}/" aria-label="${esc(z.titolo)}, zine${z.anno ? ' ' + z.anno : ''}">${fig}</a></figure>`;
     })
     .join('')}</div>`,
 });
@@ -95,7 +96,7 @@ for (const z of zine) {
     seo: { titolo: `${z.titolo}, zine fotografica — ${settings.nome}`, descrizione: z.descrizione },
     h1: { testo: z.titolo, visibile: true },
     corpo:
-      `<div class="testo-pagina">${z.testo.map((t) => `<p>${esc(fill(t, settings))}</p>`).join('')}</div>` +
+      `<div class="testo-pagina">${z.sottotitolo ? `<p>${esc(z.sottotitolo)}</p>` : ''}${z.testo.map((t) => `<p>${esc(fill(t, settings))}</p>`).join('')}</div>` +
       ModuloShop(z, settings) +
       ristampa +
       (z.foto && z.foto.length ? GrigliaFoto(z.foto, settings) : ''),

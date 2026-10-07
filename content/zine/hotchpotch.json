@@ -1,0 +1,14 @@
+{
+  "attiva": false,
+  "titolo": "Hotchpotch",
+  "sottotitolo": "Salsa Rosa",
+  "anno": null,
+  "descrizione": "Zine fotografica autoprodotta di Mr.Chav su Palermo. 32 pagine di sole fotografie, formato 140×200 mm, punto metallico.",
+  "testo": [
+    "Zine fotografica autoprodotta su Palermo. Trentadue pagine di sole fotografie, senza testi. Formato 140×200 mm, punto metallico. Foto e idea di Mr.Chav."
+  ],
+  "copertina": null,
+  "foto": [],
+  "ristampa": { "attiva": false },
+  "preordine": { "attivo": false }
+}

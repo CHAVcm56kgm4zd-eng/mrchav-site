@@ -25,7 +25,7 @@ Riferimento: boogiephotographer.com. Screenshot in `docs/riferimenti/`.
 
 ## Zine (deciso)
 - Le zine sono più di una: struttura a collezione. Link fisso "Zine" nello stesso stile dei contatti, che porta a `/zine/`; ogni zine ha la sua pagina in forma di scroll di foto con poche righe di testo.
-- Da definire con Vincenzo: elenco delle zine da pubblicare (oltre a DICIOTTO).
+- Zine: Diciotto (pubblicata) e Hotchpotch / Salsa Rosa (bozza, "attiva": false in content/zine/hotchpotch.json, da accendere quando copertina e foto sono pronte).
 
 ## Chi sono (deciso)
 - Blocco breve di testo in fondo allo scroll della home, con link discreto alla pagina completa `/chi-sono/`.
