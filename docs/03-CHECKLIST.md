@@ -4,11 +4,12 @@ Segnare [x] solo a verifica fatta.
 
 ## 1. Strategia e contenuti
 - [ ] Obiettivo: presenza professionale per lavori con brand ed eventi
+- [ ] Selezione foto da rifare con calma (griglia unica in home)
 - [ ] Pubblico e parole chiave principali definiti
 - [ ] Testi finali in italiano per ogni pagina
 - [ ] Didascalie e testi alternativi per ogni foto
 - [ ] Privacy policy e copyright scritti
-- [ ] Dato corretto: pagine dello zine (50 o 51)
+- [ ] Dato corretto: pagine dello zine (52, 56 o 60: contare a mano)
 
 ## 2. Architettura
 - [ ] Sitemap approvata

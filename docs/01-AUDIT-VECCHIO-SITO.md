@@ -11,7 +11,7 @@ Fonte: lettura pubblica di https://mrchav.com. Codice sorgente non disponibile (
 - Pagina unica con sezioni ad ancora: un solo URL indicizzabile.
 - Canonical `https://mrchav.com/` ma `og:url` `https://www.mrchav.com/`: incoerenza.
 - Meta keywords molto lunghe: ignorate da Google, da eliminare.
-- Pagine zine: il sito dice 50, appunti precedenti 51 (da chiarire).
+- Pagine zine: il sito dice 50, appunti precedenti 51, ma lo zine è a multipli di 4: tra 50 e 60 i candidati sono 52, 56, 60. Numero da contare a mano; finché non confermato non va scritto nel sito.
 - Pagine /privacy e /copyright linkate: da verificare che esistano e abbiano testi.
 
 ## Da conservare
