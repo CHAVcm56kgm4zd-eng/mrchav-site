@@ -1,13 +1,17 @@
 {
-  "attiva": false,
+  "attiva": true,
   "titolo": "Hotchpotch",
-  "sottotitolo": "Salsa Rosa",
-  "anno": null,
-  "descrizione": "Zine fotografica autoprodotta di Mr.Chav su Palermo. 32 pagine di sole fotografie, formato 140×200 mm, punto metallico.",
+  "anno": 2026,
+  "descrizione": "Hotchpotch, zine fotografica di Mr.Chav su Sicilia e Palermo. 32 pagine, fotografie analogiche e digitali, 100 copie.",
   "testo": [
-    "Zine fotografica autoprodotta su Palermo. Trentadue pagine di sole fotografie, senza testi. Formato 140×200 mm, punto metallico. Foto e idea di Mr.Chav."
+    "Hotchpotch vuol dire miscuglio, ed è più o meno da lì che parte tutto.",
+    "È il mio secondo lavoro fotografico su carta dopo Diciotto. Questa volta volevo progettare qualcosa di più leggero, dall'idea all'oggetto stesso. 32 pagine tenute insieme, ancora una volta, dalla Sicilia e da Palermo, la mia città.",
+    "Dentro c'è un po' di tutto, la food photography, la strada, le persone, i riti, la vita quotidiana. Santa Rosalia circondata da sarde allinguate, un bambino al mare, un corteo funebre, gli Skins a Ballarò. E poi un cruscotto pieno di santini, con Madonna in penombra dietro.",
+    "Non volevo evitare gli stereotipi siciliani e neanche raccontarli per forza come tali. Mi piaceva piuttosto l'idea di giocarci, metterli insieme, scomporli, affiancarli e vedere cosa succedeva.",
+    "Alla fine è un'insalata fotografica, ma il filo c'è. Ed è ancora una volta la mia terra.",
+    "32 pagine, formato circa A5. Fotografie analogiche e digitali. Stampa HP Indigo, carta patinata opaca 135 g/m², rilegatura a punto metallico. Tiratura 100 copie."
   ],
-  "copertina": null,
+  "copertina": { "src": "/zine/hotchpotch-copertina.jpg", "width": 1128, "height": 1600, "alt": "Copertina della zine Hotchpotch di Mr.Chav" },
   "foto": [],
   "ristampa": { "attiva": false },
   "preordine": { "attivo": false }

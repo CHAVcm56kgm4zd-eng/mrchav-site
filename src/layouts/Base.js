@@ -5,7 +5,7 @@ import { PiedePagina } from '../components/PiedePagina.js';
 import { esc } from '../lib/util.js';
 
 // Struttura comune di tutte le pagine. Colori letti da content/settings.json (nessun colore nel CSS delle pagine).
-export function Base({ settings, seo, h1, corpo, pagineLegali, anno }) {
+export function Base({ settings, seo, h1, corpo, pagineLegali, anno, tipo = 'testo' }) {
   return `<!doctype html>
 <html lang="it">
 <head>
@@ -17,7 +17,7 @@ export function Base({ settings, seo, h1, corpo, pagineLegali, anno }) {
 <link rel="stylesheet" href="/css/global.css">
 ${SEO(seo)}
 </head>
-<body>
+<body class="tipo-${tipo}">
 <a class="salta" href="#contenuto">Vai al contenuto</a>
 ${Wordmark(settings)}
 ${ContattiFissi(settings)}

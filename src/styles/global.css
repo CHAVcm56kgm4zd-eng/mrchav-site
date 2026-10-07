@@ -74,3 +74,15 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 .zine-elenco .foto a { text-decoration: none; }
 
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+/* Pagine di testo: i contatti fissi hanno uno sfondo pieno, così non si sovrappongono alle righe. */
+.tipo-testo .contatti-fissi {
+  left: 0; right: 0; bottom: 0; padding: .7rem var(--margine);
+  mix-blend-mode: normal; background: var(--sfondo);
+}
+.copertina-zine { max-width: 24rem; margin: 0 var(--margine) 1.5rem; }
+.copertina-zine .foto { break-inside: auto; }
+.tipo-testo .wordmark {
+  left: 0; right: 0; top: 0; padding: .5rem var(--margine) .2rem;
+  mix-blend-mode: normal; background: var(--sfondo);
+}

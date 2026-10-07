@@ -35,7 +35,7 @@ for (const [slug, p] of Object.entries(pagine)) if (p.indicizza === false) avvis
 const pagineLegali = ['privacy', 'copyright'].map((s) => pagine[s]).filter((p) => p && p.indicizza !== false);
 const urlIndicizzabili = [];
 
-function pagina({ percorso, seo, h1, corpo, indicizza = true }) {
+function pagina({ percorso, seo, h1, corpo, indicizza = true, tipo = 'testo' }) {
   const html = Base({
     settings,
     seo: { settings, percorso, indicizza, ...seo },
@@ -43,6 +43,7 @@ function pagina({ percorso, seo, h1, corpo, indicizza = true }) {
     corpo,
     pagineLegali,
     anno,
+    tipo,
   });
   const file = percorso === '/404' ? '404.html' : join(percorso.replace(/^\//, ''), 'index.html');
   mkdirSync(dirname(join(dist, file)), { recursive: true });
@@ -60,6 +61,7 @@ pagina({
   percorso: '/',
   seo: { titolo: fill(settings.titoloHome, settings), descrizione: settings.descrizione, home: true },
   h1: { testo: fill(settings.titoloH1, settings), visibile: false },
+  tipo: 'griglia',
   corpo: GrigliaFoto(foto, settings) + (pagine['chi-sono'] ? BloccoChiSono(pagine['chi-sono'], settings) : ''),
 });
 
@@ -77,6 +79,7 @@ pagina({
   percorso: '/zine/',
   seo: { titolo: `Zine — ${settings.nome}`, descrizione: `Zine fotografiche autoprodotte di ${settings.nome}.` },
   h1: { testo: 'Zine', visibile: false },
+  tipo: 'griglia',
   corpo: `<div class="griglia zine-elenco">${zine
     .map((z) => {
       const c = z.copertina;
@@ -96,6 +99,7 @@ for (const z of zine) {
     seo: { titolo: `${z.titolo}, zine fotografica — ${settings.nome}`, descrizione: z.descrizione },
     h1: { testo: z.titolo, visibile: true },
     corpo:
+      (z.copertina ? `<div class="copertina-zine">${Foto({ ...z.copertina, alt: z.copertina.alt || `Copertina ${z.titolo}` }, 0, settings)}</div>` : '') +
       `<div class="testo-pagina">${z.sottotitolo ? `<p>${esc(z.sottotitolo)}</p>` : ''}${z.testo.map((t) => `<p>${esc(fill(t, settings))}</p>`).join('')}</div>` +
       ModuloShop(z, settings) +
       ristampa +
