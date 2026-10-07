@@ -8,8 +8,8 @@ Segnare [x] solo a verifica fatta.
 - [ ] Pubblico e parole chiave principali definiti
 - [ ] Testi finali in italiano per ogni pagina
 - [ ] Didascalie e testi alternativi per ogni foto
-- [ ] Privacy policy e copyright scritti
-- [ ] Dato corretto: pagine dello zine (52, 56 o 60: contare a mano)
+- [~] Privacy policy e copyright: bozza scritta, da far verificare (titolare da completare)
+- [x] Dato corretto: pagine di Diciotto = 60
 
 ## 2. Architettura
 - [x] Sitemap approvata (checkpoint 01)
@@ -64,8 +64,8 @@ Segnare [x] solo a verifica fatta.
 
 ## 10. Rilascio
 - [ ] Repository GitHub collegato a Netlify
-- [ ] Dominio, HTTPS e DNS verificati
-- [ ] Scelta www/non-www e redirect
+- [x] Dominio, HTTPS e DNS verificati (Netlify DNS, Let's Encrypt, rinnovo automatico)
+- [x] Scelta www/non-www: mrchav.com primario, www reindirizza
 - [ ] Vecchio deploy conservato fino a verifica
 
 ## 11. Dopo il rilascio

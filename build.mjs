@@ -9,7 +9,7 @@ import { GrigliaFoto } from './src/components/GrigliaFoto.js';
 import { Foto } from './src/components/Foto.js';
 import { BloccoChiSono } from './src/components/BloccoChiSono.js';
 import { ModuloShop } from './src/components/ModuloShop.js';
-import { esc, fill } from './src/lib/util.js';
+import { esc, fill, paragrafi } from './src/lib/util.js';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dist = join(root, 'dist');
@@ -71,7 +71,7 @@ pagina({
   percorso: '/chi-sono/',
   seo: { titolo: `${cs.titolo} — ${settings.nome}`, descrizione: cs.descrizione },
   h1: { testo: cs.titolo, visibile: true },
-  corpo: `<div class="testo-pagina">${cs.testo.map((t) => `<p>${esc(fill(t, settings))}</p>`).join('')}</div>`,
+  corpo: `<div class="testo-pagina">${paragrafi(cs.testo, settings)}</div>`,
 });
 
 // Indice zine
@@ -100,7 +100,7 @@ for (const z of zine) {
     h1: { testo: z.titolo, visibile: true },
     corpo:
       (z.copertina ? `<div class="copertina-zine">${Foto({ ...z.copertina, alt: z.copertina.alt || `Copertina ${z.titolo}` }, 0, settings)}</div>` : '') +
-      `<div class="testo-pagina">${z.sottotitolo ? `<p>${esc(z.sottotitolo)}</p>` : ''}${z.testo.map((t) => `<p>${esc(fill(t, settings))}</p>`).join('')}</div>` +
+      `<div class="testo-pagina">${z.sottotitolo ? `<p>${esc(z.sottotitolo)}</p>` : ''}${paragrafi(z.testo, settings)}</div>` +
       ModuloShop(z, settings) +
       ristampa +
       (z.foto && z.foto.length ? GrigliaFoto(z.foto, settings) : ''),
@@ -115,7 +115,7 @@ for (const s of ['privacy', 'copyright']) {
     percorso: `/${s}/`,
     seo: { titolo: `${p.titolo} — ${settings.nome}`, descrizione: p.descrizione },
     h1: { testo: p.titolo, visibile: true },
-    corpo: `<div class="testo-pagina">${p.testo.map((t) => `<p>${esc(t)}</p>`).join('')}</div>`,
+    corpo: `<div class="testo-pagina">${paragrafi(p.testo, settings)}</div>`,
     indicizza: p.indicizza !== false,
   });
 }
