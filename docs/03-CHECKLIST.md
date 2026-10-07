@@ -12,7 +12,7 @@ Segnare [x] solo a verifica fatta.
 - [ ] Dato corretto: pagine dello zine (52, 56 o 60: contare a mano)
 
 ## 2. Architettura
-- [ ] Sitemap approvata
+- [x] Sitemap approvata (checkpoint 01)
 - [ ] URL puliti, minuscoli, senza accenti
 - [ ] Redirect definiti
 - [ ] Modello dati in `content/`
