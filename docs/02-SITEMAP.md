@@ -5,7 +5,7 @@ Cambio rispetto alla v1: niente sezione "Lavori". Ispirazione strutturale: boogi
 ## Pagine e URL
 | URL | Pagina | Note |
 |---|---|---|
-| `/` | Home | wordmark Mr.Chav, griglia unica di foto selezionate, lightbox, link a Diciotto |
+| `/` | Home | wordmark fisso, griglia unica a due colonne senza spazi, foto non cliccabili, contatti fissi (vedi 04-BRIEF-DESIGN.md) |
 | `/diciotto/` | Zine DICIOTTO | testo, foto, richiesta info ristampa; struttura pronta per modulo shop |
 | `/chi-sono/` | Chi sono | bio e contatti |
 | `/privacy/` | Privacy policy | testi da scrivere |
@@ -23,7 +23,7 @@ Senza pagine per progetto, le parole chiave vanno in: H1 e testo della home, `al
 Il vecchio sito usa ancore, non servono redirect. Regole in `public/_redirects`.
 
 ## Componenti (un file ciascuno)
-Header, Footer, GrigliaFoto, Lightbox, SezioneZine, TestoPagina, SEO (meta, Open Graph, JSON-LD), ModuloShop (disattivo).
+Wordmark (fisso), ContattiFissi, GrigliaFoto, SezioneZine, TestoPagina, SEO (meta, Open Graph, JSON-LD), ModuloShop (disattivo). Nessun Lightbox, nessun filtro.
 
 ## Dati in `content/`
 - `settings.json`: sfondo, colori, interruttore shop, email, social
