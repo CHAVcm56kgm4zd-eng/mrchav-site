@@ -6,15 +6,17 @@ Cambio rispetto alla v1: niente sezione "Lavori". Ispirazione strutturale: boogi
 | URL | Pagina | Note |
 |---|---|---|
 | `/` | Home | wordmark fisso, griglia unica a due colonne senza spazi, foto non cliccabili, contatti fissi (vedi 04-BRIEF-DESIGN.md) |
-| `/zine/` | Indice zine | scroll di copertine, una per zine; link fisso "Zine" accanto ai contatti |
+| `/zine/` | Indice zine | scroll di copertine, una per zine; link "Zine" nel menu accanto al nome |
 | `/zine/diciotto/` | Zine DICIOTTO | foto, poche righe di testo, richiesta info ristampa; una pagina così per ogni zine |
-| `/chi-sono/` | Chi sono | pagina completa, non nel menu, indicizzabile, in sitemap.xml; raggiunta da un link discreto nel blocco in fondo alla home |
+| `/chi-sono/` | Chi sono | pagina completa, nel menu accanto al nome ("Chi sono"), indicizzabile, in sitemap.xml; il testo breve in fondo alla home è stato tolto |
 | `/privacy/` | Privacy policy | testi da scrivere |
 | `/copyright/` | Copyright | testi da scrivere |
 | `/404` | Errore | |
 | `/sitemap.xml`, `/robots.txt` | Tecnici | generati |
 
-Footer su ogni pagina: email, Instagram, link privacy e copyright.
+Link alle pagine (regola): in alto a destra, sulla stessa riga del nome MR.CHAV, in basso, affiancati in orizzontale: "Zine" e "Chi sono". Nessun altro link nel menu. Il nome grande è in maiuscolo solo in pagina; titolo di scheda e Google restano "Mr.Chav".
+Contatti fissi in basso a sinistra: solo Instagram ed email.
+Piè di pagina: © anno Mr.Chav e, quando le pagine sono pubblicate, privacy e copyright. Nessuna bio visibile in fondo.
 Predisposti ma disattivati: `/zine/<nome>/preordine/` (shop, per singola zine) e `/serie/` (gruppi di foto per progetto, se in futuro vorrai).
 
 ## SEO con una sola griglia

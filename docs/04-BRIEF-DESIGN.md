@@ -24,9 +24,9 @@ Riferimento: boogiephotographer.com. Screenshot in `docs/riferimenti/`.
 - Rimossi dal progetto: Lightbox e filtri.
 
 ## Zine (deciso)
-- Le zine sono più di una: struttura a collezione. Link fisso "Zine" nello stesso stile dei contatti, che porta a `/zine/`; ogni zine ha la sua pagina in forma di scroll di foto con poche righe di testo.
+- Le zine sono più di una: struttura a collezione. Link "Zine" nel menu accanto al nome (vedi sitemap), che porta a `/zine/`; ogni zine ha la sua pagina in forma di scroll di foto con poche righe di testo.
 - Zine: Diciotto e Hotchpotch (2026, in stampa), entrambe pubblicate nel sito. Testi di Hotchpotch dalla presentazione di Vincenzo; prezzo (15 euro) non pubblicato perché la vendita è rimandata.
 
 ## Chi sono (deciso)
-- Blocco breve di testo in fondo allo scroll della home, con link discreto alla pagina completa `/chi-sono/`.
-- La pagina non è nel menu ma resta pubblica, collegata e in sitemap.xml: una pagina senza nessun link interno viene valorizzata meno da Google. Il testo non viene mai nascosto agli utenti e mostrato solo ai crawler (sarebbe contro le linee guida).
+- Nessun testo visibile in fondo alla home (deciso il 2026-10-08). Link "Chi sono" nel menu accanto al nome.
+- La pagina è pubblica, collegata dal menu e in sitemap.xml: una pagina senza nessun link interno viene valorizzata meno da Google. Il testo non viene mai nascosto agli utenti e mostrato solo ai crawler (sarebbe contro le linee guida).
