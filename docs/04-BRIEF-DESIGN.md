@@ -34,3 +34,4 @@ Riferimento: boogiephotographer.com. Screenshot in `docs/riferimenti/`.
 ## Font (deciso il 2026-10-08)
 - Punto di partenza: Gantari (stesso font di boogiephotographer.com), ospitato in locale (`public/fonts/Gantari-VF.ttf`, licenza OFL). Si cambia con `font` in `content/settings.json`.
 - Il font definitivo sarà quello in sintonia con il nome MR.CHAV (da scegliere in seguito, magari con un logotipo).
+- Aggiornamento 2026-10-09: scelta la combinazione Gantari grassetto (solo il nome MR.CHAV) + Manrope (menu, contatti, testi). Alternative pronte in `content/settings.json` con "font": "inter" o "newsreader". Il font definitivo del nome resta da scegliere più avanti.
