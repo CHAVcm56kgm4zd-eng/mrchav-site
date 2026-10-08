@@ -4,6 +4,12 @@ import { ContattiFissi } from '../components/ContattiFissi.js';
 import { PiedePagina } from '../components/PiedePagina.js';
 import { esc } from '../lib/util.js';
 
+// Caratteri: si sceglie in content/settings.json ("font": "sans" oppure "baskerville").
+const FONT = {
+  sans: '"Avenir Next", Avenir, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  baskerville: '"Libre Baskerville", Georgia, "Times New Roman", serif',
+};
+
 // Struttura comune di tutte le pagine. Colori letti da content/settings.json (nessun colore nel CSS delle pagine).
 export function Base({ settings, seo, h1, corpo, pagineLegali, anno, tipo = 'testo' }) {
   return `<!doctype html>
@@ -12,8 +18,7 @@ export function Base({ settings, seo, h1, corpo, pagineLegali, anno, tipo = 'tes
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="${esc(settings.sfondo)}">
-<link rel="preload" href="/fonts/LibreBaskerville-Regular.ttf" as="font" type="font/ttf" crossorigin>
-<style>:root{--sfondo:${esc(settings.sfondo)};--testo:${esc(settings.testo)}}</style>
+${settings.font === 'baskerville' ? '<link rel="preload" href="/fonts/LibreBaskerville-Regular.ttf" as="font" type="font/ttf" crossorigin>\n' : ''}<style>:root{--sfondo:${esc(settings.sfondo)};--testo:${esc(settings.testo)};--font:${FONT[settings.font] || FONT.sans}}</style>
 <link rel="stylesheet" href="/css/global.css">
 ${SEO(seo)}
 </head>
@@ -26,7 +31,7 @@ ${ContattiFissi(settings)}
 <h1 class="${h1.visibile ? 'titolo-pagina' : 'solo-lettori'}">${esc(h1.testo)}</h1>
 ${corpo}
 </main>
-${PiedePagina(pagineLegali, anno)}
+${PiedePagina(pagineLegali, anno, seo.percorso !== '/chi-sono/')}
 </body>
 </html>`;
 }

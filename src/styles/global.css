@@ -2,7 +2,7 @@
 :root {
   --alt-wordmark: clamp(2.6rem, 13vw, 7rem);
   --margine: 1rem;
-  --font: "Libre Baskerville", Georgia, "Times New Roman", serif;
+  --font: "Avenir Next", Avenir, "Helvetica Neue", Helvetica, Arial, sans-serif; /* sostituito da Base.js secondo settings.font */
 }
 
 @font-face {
@@ -65,9 +65,8 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
 /* Pagine di testo */
 .titolo-pagina { font-weight: 400; font-size: clamp(1.6rem, 6vw, 2.4rem); line-height: 1.2; margin: 0 var(--margine) 1.5rem; }
-.testo-pagina, .blocco-chi-sono, .piede { padding: 0 var(--margine); max-width: 46rem; }
-.testo-pagina p, .blocco-chi-sono p { margin: 0 0 1.2rem; }
-.blocco-chi-sono { margin: 3rem 0 1rem; }
+.testo-pagina, .piede { padding: 0 var(--margine); max-width: 46rem; }
+.testo-pagina p { margin: 0 0 1.2rem; }
 .piede { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .85rem; padding-top: 1rem; padding-bottom: 8rem; opacity: .8; }
 .ristampa { margin: 1.5rem var(--margine) 2rem; }
 .shop { margin: 1rem var(--margine); }

@@ -11,6 +11,6 @@
   "descrizione": "Mr.Chav è un fotografo nato a Palermo, residente a {luogo}. Street photography, documentario, ritratti ed eventi. Analogico e digitale.",
   "ogImageCloudinaryId": "60930028_dz0yhm",
   "cloudinaryCloud": "dbhswbguk",
-  "chiSonoLink": true,
-  "shopAttivo": false
+  "shopAttivo": false,
+  "font": "sans"
 }

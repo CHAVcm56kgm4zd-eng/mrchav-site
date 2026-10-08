@@ -7,7 +7,6 @@ import { fileURLToPath } from 'node:url';
 import { Base } from './src/layouts/Base.js';
 import { GrigliaFoto } from './src/components/GrigliaFoto.js';
 import { Foto } from './src/components/Foto.js';
-import { BloccoChiSono } from './src/components/BloccoChiSono.js';
 import { ModuloShop } from './src/components/ModuloShop.js';
 import { esc, fill, paragrafi } from './src/lib/util.js';
 
@@ -62,7 +61,7 @@ pagina({
   seo: { titolo: fill(settings.titoloHome, settings), descrizione: settings.descrizione, home: true },
   h1: { testo: fill(settings.titoloH1, settings), visibile: false },
   tipo: 'griglia',
-  corpo: GrigliaFoto(foto, settings) + (pagine['chi-sono'] ? BloccoChiSono(pagine['chi-sono'], settings) : ''),
+  corpo: GrigliaFoto(foto, settings),
 });
 
 // Chi sono (pagina completa, fuori dal menu ma collegata e in sitemap)
