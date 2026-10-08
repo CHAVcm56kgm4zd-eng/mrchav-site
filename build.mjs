@@ -136,7 +136,13 @@ writeFileSync(
     .map((u) => `  <url><loc>${settings.sito}${u}</loc></url>`)
     .join('\n')}\n</urlset>\n`
 );
-writeFileSync(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${settings.sito}/sitemap.xml\n`);
+// Anteprima: se su Netlify è impostata la variabile SITO_ANTEPRIMA, il sito non va su Google.
+const anteprima = Boolean(process.env.SITO_ANTEPRIMA);
+writeFileSync(
+  join(dist, 'robots.txt'),
+  anteprima ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${settings.sito}/sitemap.xml\n`
+);
+if (anteprima) writeFileSync(join(dist, '_headers'), '/*\n  X-Robots-Tag: noindex, nofollow\n');
 
-console.log(`Build completata: ${foto.length} foto, ${zine.length} zine, ${urlIndicizzabili.length} URL in sitemap.`);
+console.log(`Build completata: ${foto.length} foto, ${zine.length} zine, ${urlIndicizzabili.length} URL in sitemap.${anteprima ? ' MODALITÀ ANTEPRIMA: noindex.' : ''}`);
 for (const a of avvisi) console.log('Avviso:', a);
