@@ -43,14 +43,14 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
   position: fixed; z-index: 50; left: var(--margine);
   color: #fff; mix-blend-mode: difference; text-decoration: none;
 }
-.intestazione { top: .5rem; display: flex; align-items: flex-start; gap: 1rem; }
+.intestazione { top: .5rem; right: var(--margine); display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; }
 .wordmark {
   color: inherit; text-decoration: none; text-transform: uppercase;
   font-size: var(--alt-wordmark); line-height: 1; letter-spacing: -0.02em;
 }
 .navigazione {
-  display: flex; flex-direction: column; gap: .2rem; padding-top: .3em;
-  font-size: clamp(.95rem, 3.8vw, 1.25rem); line-height: 1.3;
+  display: flex; flex-direction: row; gap: 1.2rem; padding-bottom: .35em;
+  font-size: clamp(.85rem, 3.4vw, 1.25rem); line-height: 1.3; white-space: nowrap;
 }
 .navigazione a { color: #fff; text-decoration: none; }
 .navigazione a:hover { text-decoration: underline; }
