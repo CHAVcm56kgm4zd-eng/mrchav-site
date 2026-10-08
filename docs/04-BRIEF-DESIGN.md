@@ -30,3 +30,7 @@ Riferimento: boogiephotographer.com. Screenshot in `docs/riferimenti/`.
 ## Chi sono (deciso)
 - Nessun testo visibile in fondo alla home (deciso il 2026-10-08). Link "Chi sono" nel menu accanto al nome.
 - La pagina è pubblica, collegata dal menu e in sitemap.xml: una pagina senza nessun link interno viene valorizzata meno da Google. Il testo non viene mai nascosto agli utenti e mostrato solo ai crawler (sarebbe contro le linee guida).
+
+## Font (deciso il 2026-10-08)
+- Punto di partenza: Gantari (stesso font di boogiephotographer.com), ospitato in locale (`public/fonts/Gantari-VF.ttf`, licenza OFL). Si cambia con `font` in `content/settings.json`.
+- Il font definitivo sarà quello in sintonia con il nome MR.CHAV (da scegliere in seguito, magari con un logotipo).
