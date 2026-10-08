@@ -13,6 +13,9 @@
   font-display: swap;
 }
 
+@font-face { font-family: "Manrope"; src: url("/fonts/Manrope-VF.ttf") format("truetype"); font-weight: 200 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-VF.ttf") format("truetype"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Newsreader"; src: url("/fonts/Newsreader-VF.ttf") format("truetype"); font-weight: 200 800; font-style: normal; font-display: swap; }
 @font-face {
   font-family: "Gantari";
   src: url("/fonts/Gantari-VF.ttf") format("truetype");
@@ -53,7 +56,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 }
 .intestazione { top: .5rem; right: var(--margine); display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; }
 .wordmark {
-  color: inherit; text-decoration: none; text-transform: uppercase;
+  color: inherit; text-decoration: none; text-transform: uppercase; font-family: var(--font-titolo);
   font-size: var(--alt-wordmark); line-height: 1; letter-spacing: -0.03em; font-weight: 700;
 }
 .navigazione {
