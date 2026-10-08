@@ -11,3 +11,4 @@
 | 06 | 2026-10-08 | Step 4 rifinitura: titolare privacy indicato, frase Diciotto corretta (versione B), controllo sintassi e ridondanze | checkpoint-06 | backups/mrchav-site-checkpoint-06.zip |
 | 07 | 2026-10-08 | Indicizzazione Google: guide lette, sitemap senza lastmod, checklist sezione 12, decisioni su Instagram/LinkedIn | checkpoint-07 | backups/mrchav-site-checkpoint-07.zip |
 | 08 | 2026-10-08 | Anteprima su GitHub e Netlify (noindex); home senza testo visibile; menu Zine e Chi sono a destra del nome in maiuscolo; regole dei link aggiornate | checkpoint-08 | backups/mrchav-site-checkpoint-08.zip |
+| 09 | 2026-10-08 | Font Gantari (punto di partenza, stesso di Boogie) ospitato in locale; Instagram senza @ nel link; font definitivo da scegliere in sintonia con MR.CHAV | checkpoint-09 | backups/mrchav-site-checkpoint-09.zip |
