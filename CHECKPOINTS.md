@@ -12,3 +12,4 @@
 | 07 | 2026-10-08 | Indicizzazione Google: guide lette, sitemap senza lastmod, checklist sezione 12, decisioni su Instagram/LinkedIn | checkpoint-07 | backups/mrchav-site-checkpoint-07.zip |
 | 08 | 2026-10-08 | Anteprima su GitHub e Netlify (noindex); home senza testo visibile; menu Zine e Chi sono a destra del nome in maiuscolo; regole dei link aggiornate | checkpoint-08 | backups/mrchav-site-checkpoint-08.zip |
 | 09 | 2026-10-08 | Font Gantari (punto di partenza, stesso di Boogie) ospitato in locale; Instagram senza @ nel link; font definitivo da scegliere in sintonia con MR.CHAV | checkpoint-09 | backups/mrchav-site-checkpoint-09.zip |
+| 10 | 2026-10-09 | Font: titolo Gantari grassetto + Manrope per il resto (Inter e Newsreader pronti); wordmark ridotto; riferimenti di design analizzati | checkpoint-10 | backups/mrchav-site-checkpoint-10.zip |
