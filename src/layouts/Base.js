@@ -31,7 +31,7 @@ ${ContattiFissi(settings)}
 <h1 class="${h1.visibile ? 'titolo-pagina' : 'solo-lettori'}">${esc(h1.testo)}</h1>
 ${corpo}
 </main>
-${PiedePagina(pagineLegali, anno, seo.percorso !== '/chi-sono/')}
+${PiedePagina(pagineLegali, anno)}
 </body>
 </html>`;
 }

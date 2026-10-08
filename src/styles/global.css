@@ -39,13 +39,21 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 .salta:focus { left: 0; }
 
 /* Elementi fissi: bianchi con effetto di fusione sull'immagine sotto. */
-.wordmark, .contatti-fissi {
+.intestazione, .contatti-fissi {
   position: fixed; z-index: 50; left: var(--margine);
   color: #fff; mix-blend-mode: difference; text-decoration: none;
 }
+.intestazione { top: .5rem; display: flex; align-items: flex-start; gap: 1rem; }
 .wordmark {
-  top: .5rem; font-size: var(--alt-wordmark); line-height: 1; letter-spacing: -0.02em;
+  color: inherit; text-decoration: none; text-transform: uppercase;
+  font-size: var(--alt-wordmark); line-height: 1; letter-spacing: -0.02em;
 }
+.navigazione {
+  display: flex; flex-direction: column; gap: .2rem; padding-top: .3em;
+  font-size: clamp(.95rem, 3.8vw, 1.25rem); line-height: 1.3;
+}
+.navigazione a { color: #fff; text-decoration: none; }
+.navigazione a:hover { text-decoration: underline; }
 .contatti-fissi {
   bottom: var(--margine); display: flex; flex-direction: column; gap: .35rem;
   font-size: clamp(.95rem, 3.8vw, 1.25rem); line-height: 1.3;
@@ -81,7 +89,7 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 }
 .copertina-zine { max-width: 24rem; margin: 0 var(--margine) 1.5rem; }
 .copertina-zine .foto { break-inside: auto; }
-.tipo-testo .wordmark {
+.tipo-testo .intestazione {
   left: 0; right: 0; top: 0; padding: .5rem var(--margine) .2rem;
   mix-blend-mode: normal; background: var(--sfondo);
 }
